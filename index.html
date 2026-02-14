@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asia Tour Travel - Cari Tiket</title>
+<style>
+body{margin:0;font-family:Arial;background:#f5f7fb}
+header{background:linear-gradient(135deg,#0066ff,#ffd000);color:#fff;padding:20px;text-align:center}
+.container{max-width:600px;margin:auto;padding:15px}
+.card{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+input,select,button{width:100%;padding:12px;margin:6px 0;border-radius:6px;border:1px solid #ddd}
+button{background:#0066ff;color:#fff;border:none;font-weight:bold}
+button:hover{background:#004ecc}
+.wa{background:#25d366}
+.price{font-size:22px;font-weight:bold;color:#0066ff}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Asia Tour Travel</h1>
+<p>Cari Tiket Pesawat Domestik</p>
+</header>
+
+<div class="container">
+<div class="card">
+<h3>Cari Rute</h3>
+<select id="asal"></select>
+<select id="tujuan"></select>
+<input type="date" id="tanggal">
+<select id="pax">
+<option value="1">1 Penumpang</option>
+<option value="2">2 Penumpang</option>
+<option value="3">3 Penumpang</option>
+<option value="4">4 Penumpang</option>
+<option value="5">5 Penumpang</option>
+</select>
+<button onclick="cari()">Cari Tiket</button>
+</div>
+
+<div id="hasil" class="card" style="display:none"></div>
+</div>
+
+<script>
+const routes=[
+{from:'Jakarta',to:'Surabaya',price:850000},
+{from:'Jakarta',to:'Bali',price:1250000},
+{from:'Jakarta',to:'Medan',price:1450000},
+{from:'Surabaya',to:'Bali',price:650000}
+];
+
+const asal=document.getElementById('asal');
+const tujuan=document.getElementById('tujuan');
+const cities=[...new Set(routes.flatMap(r=>[r.from,r.to]))];
+asal.innerHTML=cities.map(c=>`<option>${c}</option>`).join('');
+tujuan.innerHTML=cities.map(c=>`<option>${c}</option>`).join('');
+
+function rupiah(n){return 'Rp '+n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+
+function cari(){
+const a=asal.value,t=tujuan.value,d=document.getElementById('tanggal').value,p=parseInt(document.getElementById('pax').value);
+const r=routes.find(x=>x.from===a&&x.to===t);
+const box=document.getElementById('hasil');
+if(!r){box.style.display='block';box.innerHTML='Rute belum tersedia';return;}
+const total=r.price*p;
+box.style.display='block';
+box.innerHTML=`<h3>Hasil</h3><p>${a} → ${t}</p><p class="price">${rupiah(total)}</p>
+<button class="wa" onclick="window.open('https://wa.me/6285396819377?text=Pesan tiket ${a}-${t} tanggal ${d} ${p} pax harga ${rupiah(total)}')">Pesan via WhatsApp</button>`;
+}
+</script>
+
+</body>
+</html>
